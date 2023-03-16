@@ -75,8 +75,11 @@ public class frmMain extends javax.swing.JFrame {
     }
     void eliminar(){
         int fila = tablaP.getSelectedRow();
-        dtm.removeRow(fila);
-        
+        Object ObtTiempoObj = tablaP.getValueAt(fila, 2);
+        String ObtTiempoStr = ObtTiempoObj.toString();
+        int ObtTiempo = Integer.parseInt(ObtTiempoStr);
+        contadorCPU = contadorCPU - ObtTiempo;        
+        dtm.removeRow(fila);        
     }
     
     void limpiar(){
