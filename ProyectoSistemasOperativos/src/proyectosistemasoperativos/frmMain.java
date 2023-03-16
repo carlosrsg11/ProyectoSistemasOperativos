@@ -21,8 +21,32 @@ public class frmMain extends javax.swing.JFrame {
     //int[] tinicio = new int[15];
     //int[] tconsumo = new int[15];
     int contador = 1;
+    int contadorCPU = 0; 
     String proceso = "P";
+    int TamMemoria = 50;
+    String Hexadecimal = Integer.toHexString(TamMemoria);
     
+    //Metodo para guardar los datos de la tabla en un array
+    void Organizar(){
+            int filas = dtm.getRowCount();
+    int columnas = dtm.getColumnCount();
+    
+    // creamos el array para guardar los datos de la tabla
+    Object[][] arrayTabla = new Object[filas][columnas];
+    
+    //Recorremos la tabla y metemos los datos al array
+    for (int i = 0; i < filas; i++) {
+        for (int j = 0; j < columnas; j++) {
+        arrayTabla[i][j] = dtm.getValueAt(i, j);
+    }
+    }
+    for (int i = 0; i < filas; i++) {
+    for (int j = 0; j < columnas; j++) {
+        System.out.print(arrayTabla[i][j] + " ");
+    }
+    System.out.println();
+}
+    }
     public frmMain() {
         initComponents();
         String[] titulo = new String[]{"Proceso:", "Tiempo incio:", "Tiempo consumo:"};
@@ -30,16 +54,23 @@ public class frmMain extends javax.swing.JFrame {
         tablaP.setModel(dtm);
     }
     
-    void agregar(){        
+    void agregar(){ 
+        int ObtTiempo = Integer.parseInt(txtTiempo.getText());
         if (txtInicio.getText().isEmpty() || txtTiempo.getText().isEmpty()) {
             JOptionPane.showMessageDialog(null, "Hacen falta datos.");
         } else {
+            if(contadorCPU+ObtTiempo<=TamMemoria){
             String idProceso = proceso + contador;
             dtm.addRow(new Object[]{
                 idProceso, txtInicio.getText(), txtTiempo.getText()
             });
             txtInicio.setText("");
             txtTiempo.setText("");
+            contadorCPU = ObtTiempo+contadorCPU;
+            }
+            else {
+            JOptionPane.showMessageDialog(null, "Tamaño de memoria insuficiente.\n El espacio restante es: " + (50-contadorCPU));
+            }
         }
     }
     void eliminar(){
@@ -92,6 +123,11 @@ public class frmMain extends javax.swing.JFrame {
         btnIniciar.setBackground(new java.awt.Color(204, 255, 204));
         btnIniciar.setFont(new java.awt.Font("Times New Roman", 1, 36)); // NOI18N
         btnIniciar.setText("Iniciar");
+        btnIniciar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnIniciarActionPerformed(evt);
+            }
+        });
 
         jLabel2.setFont(new java.awt.Font("Times New Roman", 1, 36)); // NOI18N
         jLabel2.setText("Procesos");
@@ -268,6 +304,11 @@ public class frmMain extends javax.swing.JFrame {
         // TODO add your handling code here:
         eliminar();
     }//GEN-LAST:event_btnDelActionPerformed
+
+    private void btnIniciarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIniciarActionPerformed
+        // TODO add your handling code here:
+        Organizar();
+    }//GEN-LAST:event_btnIniciarActionPerformed
 
     /**
      * @param args the command line arguments
