@@ -6,7 +6,7 @@ package proyectosistemasoperativos;
 
 /**
  *
- * @author carlo
+ * @author carlos wicoy
  */
 public class ProyectoSistemasOperativos {
 
