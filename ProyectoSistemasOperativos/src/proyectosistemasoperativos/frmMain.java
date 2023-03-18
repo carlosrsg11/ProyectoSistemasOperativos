@@ -24,12 +24,12 @@ public class frmMain extends javax.swing.JFrame {
     //int[] tconsumo = new int[15];
     int contador = 0;
     int contadorCPU = 0; 
-    int Quantum = 2;
+    int Quantum = 3;
     int faltante = 0;
     int tProceso = 0;
     int procesoActual;
     int cantidadProcesos = 0;
-    float tiempoTerminado = 0;
+    int tiempoTerminado = 1;
     String proceso = "P";
     String estado = "Listo";
     int TamMemoria = 50;
@@ -60,31 +60,42 @@ public class frmMain extends javax.swing.JFrame {
     public frmMain() {
         initComponents(); 
         limpiar();
+        
+        TablaF.setVisible(false);
+        jtTerminados.setVisible(false);
+        jtTiempoProcesos.setVisible(false);
     }
  
     void agregar(){ 
         DefaultTableModel modelo = (DefaultTableModel) TablaP.getModel();
-                
+        
+        
+        DefaultTableModel modeloF = (DefaultTableModel) TablaF.getModel();        
+        
+        
         int ObtTiempo = Integer.parseInt(txtTiempo.getText());
         if (txtInicio.getText().isEmpty() || txtTiempo.getText().isEmpty()) {
             JOptionPane.showMessageDialog(null, "Hacen falta datos.");
         } else {
             if(contadorCPU + ObtTiempo <= TamMemoria) {
                 contador++;
-                //Object[] miTabla = new Object[1];
-                String idProceso = proceso + contador;
-                //miTabla[0] = idProceso;
+                String idProceso = proceso + contador;                
                 int textoInicio = Integer.parseInt(txtInicio.getText());
                 int textoTiempo = Integer.parseInt(txtTiempo.getText());  
                 modelo.addRow(new Object[]{idProceso, textoInicio, textoTiempo});
                 txtInicio.setText(null);
                 txtTiempo.setText(null);
-            contadorCPU = ObtTiempo+contadorCPU;
+                contadorCPU = ObtTiempo+contadorCPU;
+
+
+                modeloF.addRow(new Object[]{idProceso, "--", Quantum, ObtTiempo, "--", "--", "--"});
+                
+                
             }
             else {
             JOptionPane.showMessageDialog(null, "Tamaño de memoria insuficiente.\n El espacio restante es: " + (50-contadorCPU));
             }
-        }
+        }        
     }
     
     void limpiar() {
@@ -95,6 +106,14 @@ public class frmMain extends javax.swing.JFrame {
         }
         txtInicio.setText(null);
         txtTiempo.setText(null);
+        
+        
+        
+        DefaultTableModel modeloF = (DefaultTableModel) TablaF.getModel();
+        int filasF = modeloF.getRowCount();
+        for (int i = 0; i < filasF; i++) {
+            modeloF.removeRow(0);
+        }
     }
     /**
      * This method is called from within the constructor to initialize the form.
@@ -555,8 +574,12 @@ public class frmMain extends javax.swing.JFrame {
     private void btnIniciarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIniciarActionPerformed
         // TODO add your handling code here:
         //Organizar();
-        new Thread(new Hilo()).start(); //Crea un nuevo hilo
+        //new Thread(new Hilo()).start(); //Crea un nuevo hilo
         //Iniciar();
+        TablaF.setVisible(true);
+        jtTerminados.setVisible(true);
+        jtTiempoProcesos.setVisible(true);
+        new Thread(new Hilo()).start();
     }//GEN-LAST:event_btnIniciarActionPerformed
 
     /**
@@ -612,7 +635,7 @@ public class frmMain extends javax.swing.JFrame {
         jtTiempoProcesos.setText(String.valueOf(tiempoTerminado + " Segundos"));
     }
     
-    private class Hilo implements Runnable { //Objeto de tipo Hilo con extension ejectubale
+    /*private class Hilo implements Runnable { //Objeto de tipo Hilo con extension ejectubale
 
         @Override
         public void run() {
@@ -672,6 +695,154 @@ public class frmMain extends javax.swing.JFrame {
 
             }
 
+        }
+    }*/
+    
+    private class Hilo implements Runnable { //Objeto de tipo Hilo con extension ejectubale
+
+        @Override
+        public void run() {
+            int estado = 1; //Estado de while que indica si se puede seguir o no
+            int i = 0; // contador de while
+            //DefaultTableModel modelo = (DefaultTableModel) TablaP.getModel();
+
+            while (estado != 0) {
+                while (i < contador) { //Recorrer las filas
+                    Revisar(i);
+                    RevisarListo();
+                    Object verEstado = TablaF.getValueAt(i, 1);
+                    String stringVerEstado = verEstado.toString();
+                    if ("Listo".equals(stringVerEstado) || "Espera".equals(stringVerEstado)){
+                        if (faltante != 0 && faltante > Quantum) { //Ejecutando Procesos cuando sea mayor al quantum
+                            for (int c = 1; c <= Quantum; c++) {
+                                TablaF.setValueAt("Procesando", i, 1);
+                                //No sé si agregar aquí el sleep
+                                Dormir();
+                                //Object obtenerTiempoRestante = TablaF.getValueAt(i, 3);
+                                //String stringObtenerTiempo = obtenerTiempoRestante.toString();
+                                //faltante = Integer.parseInt(stringObtenerTiempo);
+                                faltante--;
+                                TablaF.setValueAt(String.valueOf(faltante), i, 3);
+                                tiempoTerminado++;
+                                RevisarListo();
+                                jtTiempoProcesos.setText(String.valueOf((tiempoTerminado - 1) + " Segundos"));
+                                // agregar la hora del sistema del inicio y final
+                                
+                            }
+                            TablaF.setValueAt("Espera", i, 1);
+                            if (faltante == 0) {
+                                TablaF.setValueAt("Terminado", i, 1);
+                                //Informe(i);
+                                Informar(i);
+                                //Borrar(i);
+                            }
+                        } else {
+                            if (faltante > 0 && Quantum != 0) { // Ejecutando proceso cuando tiempo restante sea menor que el quantum
+                                while (faltante > 0) {
+                                    TablaF.setValueAt("Procesando", i, 1);
+                                    Dormir();
+                                    faltante--;
+                                    TablaF.setValueAt(String.valueOf(faltante), i, 3);
+                                    tiempoTerminado++;
+                                    RevisarListo();
+                                    jtTiempoProcesos.setText(String.valueOf((tiempoTerminado - 1) + " Segundos"));
+                                    
+                                }
+                                TablaF.setValueAt("Espera", i, 1);
+                                if (faltante == 0 && Quantum != 0) {
+                                    TablaF.setValueAt("Terminado", i, 1);
+                                    TablaF.setValueAt(tiempoTerminado - 1, i, 4);
+                                    //Informe(i);
+                                    Informar(i);
+                                    //Borrar(i);
+                                }
+                            } else {
+                                if (faltante == 0 && Quantum != 0) {
+                                    TablaF.setValueAt("Terminado", i, 1);
+                                    TablaF.setValueAt(tiempoTerminado - 1, i, 4);
+                                    //Informe(i);
+                                    Informar(i);
+                                    //Borrar(i);
+                                }
+                            }
+                        }
+                    }                    
+                    //jProcesoActual.setText(String.valueOf(proceso + i)); //Borrar contenido
+                    i++;
+                }
+                i = 0;
+                //jProcesoActual.setText(String.valueOf("Terminados")); //Borrar contenido
+            }
+        }
+    }
+    
+    public void Informar(int i){
+        cantidadProcesos++;
+        jtTerminados.setText(String.valueOf(cantidadProcesos + " Terminados"));
+        
+    }
+    
+    public void RevisarListo(){
+        int numeroFilas = TablaF.getRowCount();
+        for(int c = 0; c < numeroFilas; c++) {
+            Object tiempoInicio = TablaP.getValueAt(c, 1);
+            String stringTiempoInicio = tiempoInicio.toString();
+            int intTiempoInicio = Integer.parseInt(stringTiempoInicio);
+            tProceso = intTiempoInicio; // este es el tiempo en que inicia el proceso
+            if (tProceso == tiempoTerminado) {
+                TablaF.setValueAt("Listo", c, 1);
+            }
+        }
+    }
+    
+    /*
+    public boolean EstaListo(int i){
+        boolean valor;
+        Object estado = TablaF.getValueAt(i, 0);
+        
+        
+        
+        return valor;
+    }*/
+    
+    public void Revisar(int i){
+        Object texto = TablaF.getValueAt(i, 0);
+        String pasar = texto.toString();
+        int longitud = 0;
+        longitud = pasar.length();
+        if (longitud == 2){
+            char segundoCaracter = pasar.charAt(1);
+            int valorEntero = Character.getNumericValue(segundoCaracter);
+            procesoActual = valorEntero;
+        }else{
+            char segundoCaracter = pasar.charAt(1);
+            char tercerCaracter = pasar.charAt(2);
+            String segundotercero = "" + segundoCaracter + tercerCaracter;
+            int valorEntero = Integer.parseInt(segundotercero);
+            procesoActual = valorEntero;            
+        }
+        Object tiempoFaltante = TablaF.getValueAt(i, 3);
+        String stringTiempoFaltante = tiempoFaltante.toString();        
+        int enteroTiempoFaltante = Integer.parseInt(stringTiempoFaltante);        
+        faltante = enteroTiempoFaltante;
+        
+        
+        
+        
+        /*
+        
+        Object texto2 = TablaF.getValueAt(i, 2);
+        String pasar2 = texto2.toString();        
+        int valorEntero2 = Integer.parseInt(pasar2);
+        Quantum = valorEntero2;
+        
+        */
+        
+        if (faltante > 0) {
+            jProcesoActual.setText(String.valueOf(proceso + (i + 1)));
+        }else{
+            jProcesoActual.setText("Finalizado");
+            // agregar la opción de quitarle el espacio a la memoriaCPU
         }
     }
     
