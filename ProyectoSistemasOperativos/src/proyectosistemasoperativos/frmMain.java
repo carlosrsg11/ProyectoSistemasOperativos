@@ -55,6 +55,7 @@ public class frmMain extends javax.swing.JFrame {
         for (int i = 0; i < filas; i++) {
             for (int j = 0; j < columnas; j++) {
                 System.out.print(arrayTabla[i][j] + " ");
+                
             }
             System.out.println();
         }
@@ -917,7 +918,7 @@ public class frmMain extends javax.swing.JFrame {
     }
 
        
-    //hilo del reloj a 1 seg real
+    //hilo reloj a 1 segundo real
     public class Reloj extends Thread {
         Calendar calendario;
         
