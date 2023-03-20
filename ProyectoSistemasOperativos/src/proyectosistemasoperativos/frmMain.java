@@ -4,6 +4,7 @@
  */
 package proyectosistemasoperativos;
 
+import java.io.IOException;
 import static java.lang.Integer.parseInt;
 import java.util.Calendar;
 import java.util.logging.Level;
@@ -22,7 +23,8 @@ public class frmMain extends javax.swing.JFrame {
     
     //Objeto reloj
     Reloj hora_sistema = new Reloj();
-
+    Hilo hilo = new Hilo();
+    int contadorInicio = 0;
     int contador = 0;
     int contadorCPU = 0; 
     int Quantum = 3;
@@ -118,6 +120,13 @@ public class frmMain extends javax.swing.JFrame {
         for (int i = 0; i < filasF; i++) {
             modeloF.removeRow(0);
         }
+        TablaF.setVisible(false);
+        jtTerminados.setText(null);
+        jtTerminados.setVisible(false);
+        jtTiempoProcesos.setText(null);
+        jtTiempoProcesos.setVisible(false);
+        cantidadProcesos = 0;
+        tiempoTerminado = 1;
     }
     /**
      * This method is called from within the constructor to initialize the form.
@@ -595,6 +604,10 @@ public class frmMain extends javax.swing.JFrame {
     private void btnLimpiarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLimpiarActionPerformed
         limpiar();
         contador=0;
+       /* if(contadorInicio!=0){
+        hilo.suspend();
+        } */
+       hilo.stop();
         //new Thread(new Hilo()).stop();
         // TODO add your handling code here:
     }//GEN-LAST:event_btnLimpiarActionPerformed
@@ -604,8 +617,15 @@ public class frmMain extends javax.swing.JFrame {
         TablaF.setVisible(true);
         jtTerminados.setVisible(true);
         jtTiempoProcesos.setVisible(true);
-        new Thread(new Hilo()).start();
-
+        btnLimpiar.setVisible(false);
+        hilo = new Hilo();
+        hilo.start();
+        /*if(contadorInicio==0){
+        hilo.start();
+        } else{
+        hilo.resume();
+        }
+        contadorInicio ++;*/
     }//GEN-LAST:event_btnIniciarActionPerformed
 
     private void TablaFComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_TablaFComponentShown
@@ -649,13 +669,12 @@ public class frmMain extends javax.swing.JFrame {
     }
     
    
-    private class Hilo implements Runnable { //Objeto de tipo Hilo con extension ejectubale
+    private class Hilo extends Thread { //Objeto de tipo Hilo con extension ejectubale
 
         @Override
         public void run() {
             int estado = 1; //Estado de while que indica si se puede seguir o no
             int i = 0; // contador de while
-
             while (estado != 0) {
                 while (i < contador) { //Recorrer las filas
                     Revisar(i);
@@ -716,11 +735,86 @@ public class frmMain extends javax.swing.JFrame {
                 }
                 i = 0; //
                 if(contador==cantidadProcesos){
-                    estado = 1;
+                    estado = 0;   
+                    btnLimpiar.setVisible(true);
                 }
             }
         }
     }
+    
+    /*
+    private class Hilo implements Runnable { //Objeto de tipo Hilo con extension ejectubale
+
+        @Override
+        public void run() {
+            int estado = 1; //Estado de while que indica si se puede seguir o no
+            int i = 0; // contador de while
+            while (estado != 0) {
+                while (i < contador) { //Recorrer las filas
+                    Revisar(i);
+                    RevisarListo();
+                    Object verEstado = TablaF.getValueAt(i, 1);
+                    String stringVerEstado = verEstado.toString();
+                    if ("Listo".equals(stringVerEstado) || "Espera".equals(stringVerEstado)){
+                        if (faltante != 0 && faltante > Quantum) { //Ejecutando Procesos cuando sea mayor al quantum
+                            for (int c = 1; c <= Quantum; c++) {
+                                TablaF.setValueAt("Procesando", i, 1);
+                                Dormir();
+                                faltante--;
+                                TablaF.setValueAt(String.valueOf(faltante), i, 3);
+                                tiempoTerminado++;
+                                RevisarListo();
+                                jtTiempoProcesos.setText(String.valueOf((tiempoTerminado - 1) + " Segundos"));
+                                // agregar la hora del sistema del inicio y final
+                            }
+                            TablaF.setValueAt("Espera", i, 1);
+                            if (faltante == 0) {
+                                TablaF.setValueAt("Terminado", i, 1);
+                                Informar(i);
+                                String horaF = lblhorasistema.getText();
+                                 TablaF.setValueAt(horaF, i, 6);
+                            }
+                        } else {
+                            if (faltante > 0 && Quantum != 0) { // Ejecutando proceso cuando tiempo restante sea menor que el quantum
+                                while (faltante > 0) {
+                                    TablaF.setValueAt("Procesando", i, 1);
+                                    Dormir();
+                                    faltante--;
+                                    TablaF.setValueAt(String.valueOf(faltante), i, 3);
+                                    tiempoTerminado++;
+                                    RevisarListo();
+                                    jtTiempoProcesos.setText(String.valueOf((tiempoTerminado - 1) + " Segundos"));
+                                    
+                                }
+                                TablaF.setValueAt("Espera", i, 1);
+                                if (faltante == 0 && Quantum != 0) {
+                                    TablaF.setValueAt("Terminado", i, 1);
+                                    TablaF.setValueAt(tiempoTerminado - 1, i, 4);
+                                    Informar(i);
+                                    String horaF = lblhorasistema.getText();
+                                    TablaF.setValueAt(horaF, i, 6);
+                                }
+                            } else {
+                                if (faltante == 0 && Quantum != 0) {
+                                    TablaF.setValueAt("Terminado", i, 1);
+                                    TablaF.setValueAt(tiempoTerminado - 1, i, 4);
+                                    Informar(i);
+                                    String horaF = lblhorasistema.getText();
+                                    TablaF.setValueAt(horaF, i, 6);
+                                }
+                            }
+                        }
+                    }                    
+                    i++; // Pasa a la siguiente fila
+                }
+                i = 0; //
+                if(contador==cantidadProcesos){
+                    estado = 0;                    
+                }
+            }
+        }
+    }
+    */
     
     public void HoraInicio(int i){
         Object textoI = TablaF.getValueAt(i, 1);
