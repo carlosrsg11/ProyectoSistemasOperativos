@@ -235,7 +235,7 @@ public class frmMain extends javax.swing.JFrame {
         });
         jScrollPane1.setViewportView(TablaP);
 
-        lblhorasistema.setText("jLabel13");
+        lblhorasistema.setText("--");
 
         Labelhora.setText("Hora del sistema");
 
@@ -465,7 +465,7 @@ public class frmMain extends javax.swing.JFrame {
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                .addContainerGap(31, Short.MAX_VALUE)
+                .addContainerGap(176, Short.MAX_VALUE)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
                         .addComponent(jLabel4)
@@ -473,6 +473,9 @@ public class frmMain extends javax.swing.JFrame {
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
                         .addComponent(jLabel7)
                         .addGap(84, 84, 84))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                        .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(58, 58, 58))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel10)
@@ -483,13 +486,7 @@ public class frmMain extends javax.swing.JFrame {
                             .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                                 .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                        .addGap(106, 106, 106))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                        .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(58, 58, 58))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 292, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(26, 26, 26))))
+                        .addGap(106, 106, 106))))
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addGap(81, 81, 81)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
@@ -500,9 +497,13 @@ public class frmMain extends javax.swing.JFrame {
                     .addComponent(jtTiempoProcesos, javax.swing.GroupLayout.DEFAULT_SIZE, 90, Short.MAX_VALUE)
                     .addComponent(jtTerminados))
                 .addGap(0, 0, Short.MAX_VALUE))
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                .addContainerGap())
             .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                    .addContainerGap(143, Short.MAX_VALUE)
+                    .addContainerGap(236, Short.MAX_VALUE)
                     .addComponent(jLabel9)
                     .addGap(116, 116, 116)))
         );
@@ -558,8 +559,7 @@ public class frmMain extends javax.swing.JFrame {
                 .addGap(46, 46, 46)
                 .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 202, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(88, 88, 88)
-                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -575,7 +575,7 @@ public class frmMain extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 1126, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -595,6 +595,7 @@ public class frmMain extends javax.swing.JFrame {
     private void btnLimpiarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLimpiarActionPerformed
         limpiar();
         contador=0;
+        //new Thread(new Hilo()).stop();
         // TODO add your handling code here:
     }//GEN-LAST:event_btnLimpiarActionPerformed
 
@@ -604,6 +605,7 @@ public class frmMain extends javax.swing.JFrame {
         jtTerminados.setVisible(true);
         jtTiempoProcesos.setVisible(true);
         new Thread(new Hilo()).start();
+
     }//GEN-LAST:event_btnIniciarActionPerformed
 
     private void TablaFComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_TablaFComponentShown
@@ -671,12 +673,13 @@ public class frmMain extends javax.swing.JFrame {
                                 RevisarListo();
                                 jtTiempoProcesos.setText(String.valueOf((tiempoTerminado - 1) + " Segundos"));
                                 // agregar la hora del sistema del inicio y final
-                                
                             }
                             TablaF.setValueAt("Espera", i, 1);
                             if (faltante == 0) {
                                 TablaF.setValueAt("Terminado", i, 1);
                                 Informar(i);
+                                String horaF = lblhorasistema.getText();
+                                 TablaF.setValueAt(horaF, i, 6);
                             }
                         } else {
                             if (faltante > 0 && Quantum != 0) { // Ejecutando proceso cuando tiempo restante sea menor que el quantum
@@ -695,23 +698,37 @@ public class frmMain extends javax.swing.JFrame {
                                     TablaF.setValueAt("Terminado", i, 1);
                                     TablaF.setValueAt(tiempoTerminado - 1, i, 4);
                                     Informar(i);
+                                    String horaF = lblhorasistema.getText();
+                                    TablaF.setValueAt(horaF, i, 6);
                                 }
                             } else {
                                 if (faltante == 0 && Quantum != 0) {
                                     TablaF.setValueAt("Terminado", i, 1);
                                     TablaF.setValueAt(tiempoTerminado - 1, i, 4);
                                     Informar(i);
+                                    String horaF = lblhorasistema.getText();
+                                    TablaF.setValueAt(horaF, i, 6);
                                 }
                             }
                         }
                     }                    
-                    i++;
+                    i++; // Pasa a la siguiente fila
                 }
-                i = 0;
+                i = 0; //
+                if(contador==cantidadProcesos){
+                    estado = 1;
+                }
             }
         }
     }
     
+    public void HoraInicio(int i){
+        Object textoI = TablaF.getValueAt(i, 1);
+        String pasarI = textoI.toString();
+        if("Listo".equals(pasarI)){
+            
+        }
+    }
     public void Informar(int i){
         cantidadProcesos++;
         jtTerminados.setText(String.valueOf(cantidadProcesos + " Terminados"));
@@ -727,6 +744,8 @@ public class frmMain extends javax.swing.JFrame {
             tProceso = intTiempoInicio; // este es el tiempo en que inicia el proceso
             if (tProceso == tiempoTerminado) {
                 TablaF.setValueAt("Listo", c, 1);
+                String horaI = lblhorasistema.getText();
+                TablaF.setValueAt(horaI, c, 5);
             }
         }
     }
@@ -752,7 +771,7 @@ public class frmMain extends javax.swing.JFrame {
         int enteroTiempoFaltante = Integer.parseInt(stringTiempoFaltante);        
         faltante = enteroTiempoFaltante;
         if (faltante > 0) {
-            jProcesoActual.setText(String.valueOf(proceso + (i + 1)));
+            jProcesoActual.setText(String.valueOf(proceso + procesoActual));
         }else{
             jProcesoActual.setText("Finalizado");
             // agregar la opción de quitarle el espacio a la memoriaCPU

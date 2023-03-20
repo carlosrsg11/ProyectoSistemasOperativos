@@ -23,7 +23,7 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Component id="jPanel1" alignment="0" pref="1126" max="32767" attributes="0"/>
+          <Component id="jPanel1" alignment="0" max="32767" attributes="0"/>
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
@@ -51,8 +51,7 @@
                   <EmptySpace min="-2" pref="46" max="-2" attributes="0"/>
                   <Component id="jLabel3" min="-2" pref="202" max="-2" attributes="0"/>
                   <EmptySpace min="-2" pref="88" max="-2" attributes="0"/>
-                  <Component id="jPanel3" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace max="32767" attributes="0"/>
+                  <Component id="jPanel3" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -267,7 +266,7 @@
             </Container>
             <Component class="javax.swing.JLabel" name="lblhorasistema">
               <Properties>
-                <Property name="text" type="java.lang.String" value="jLabel13"/>
+                <Property name="text" type="java.lang.String" value="--"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="Labelhora">
@@ -296,7 +295,7 @@
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="1" attributes="0">
-                      <EmptySpace pref="31" max="32767" attributes="0"/>
+                      <EmptySpace pref="176" max="32767" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" alignment="1" attributes="0">
                               <Component id="jLabel4" min="-2" max="-2" attributes="0"/>
@@ -305,6 +304,10 @@
                           <Group type="102" alignment="1" attributes="0">
                               <Component id="jLabel7" min="-2" max="-2" attributes="0"/>
                               <EmptySpace min="-2" pref="84" max="-2" attributes="0"/>
+                          </Group>
+                          <Group type="102" alignment="1" attributes="0">
+                              <Component id="jPanel4" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace min="-2" pref="58" max="-2" attributes="0"/>
                           </Group>
                           <Group type="102" alignment="1" attributes="0">
                               <Group type="103" groupAlignment="0" attributes="0">
@@ -321,14 +324,6 @@
                               </Group>
                               <EmptySpace min="-2" pref="106" max="-2" attributes="0"/>
                           </Group>
-                          <Group type="102" alignment="1" attributes="0">
-                              <Component id="jPanel4" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace min="-2" pref="58" max="-2" attributes="0"/>
-                          </Group>
-                          <Group type="102" alignment="1" attributes="0">
-                              <Component id="jScrollPane2" min="-2" pref="292" max="-2" attributes="0"/>
-                              <EmptySpace min="-2" pref="26" max="-2" attributes="0"/>
-                          </Group>
                       </Group>
                   </Group>
                   <Group type="102" attributes="0">
@@ -344,9 +339,14 @@
                       </Group>
                       <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                   </Group>
+                  <Group type="102" alignment="0" attributes="0">
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="jScrollPane2" pref="0" max="32767" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                  </Group>
                   <Group type="103" rootIndex="1" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="1" attributes="0">
-                          <EmptySpace pref="143" max="32767" attributes="0"/>
+                          <EmptySpace pref="236" max="32767" attributes="0"/>
                           <Component id="jLabel9" min="-2" max="-2" attributes="0"/>
                           <EmptySpace min="-2" pref="116" max="-2" attributes="0"/>
                       </Group>
