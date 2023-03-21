@@ -4,9 +4,12 @@
  */
 package proyectosistemasoperativos;
 
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Stroke;
 import java.io.IOException;
 import static java.lang.Integer.parseInt;
 import java.util.Calendar;
@@ -27,9 +30,11 @@ public class frmMain extends javax.swing.JFrame {
     //Objeto reloj
     Reloj hora_sistema = new Reloj();
     Hilo hilo = new Hilo();
+    Grafica grafica = new Grafica();
+    Graphics2D graficar;
     int contadorInicio = 0;
     int contador = 0;
-    int contadorCPU = 0; 
+    int contadorCPU = 10; 
     int Quantum = 3;
     int faltante = 0;
     int tProceso = 0;
@@ -38,7 +43,8 @@ public class frmMain extends javax.swing.JFrame {
     int tiempoTerminado = 1;
     String proceso = "P";
     String estado = "Listo";
-    int TamMemoria = 50;
+    int contadorM = 10;
+    int TamMemoria = 60;
     String Hexadecimal = Integer.toHexString(TamMemoria);
     
     //Metodo para guardar los datos de la tabla en un array
@@ -176,6 +182,7 @@ public class frmMain extends javax.swing.JFrame {
         jtTiempoProcesos = new javax.swing.JTextField();
         Labelhora = new javax.swing.JLabel();
         lblhorasistema = new javax.swing.JLabel();
+        jPGrafica = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -580,7 +587,18 @@ public class frmMain extends javax.swing.JFrame {
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(Labelhora, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblhorasistema))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(21, Short.MAX_VALUE))
+        );
+
+        javax.swing.GroupLayout jPGraficaLayout = new javax.swing.GroupLayout(jPGrafica);
+        jPGrafica.setLayout(jPGraficaLayout);
+        jPGraficaLayout.setHorizontalGroup(
+            jPGraficaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 225, Short.MAX_VALUE)
+        );
+        jPGraficaLayout.setVerticalGroup(
+            jPGraficaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 600, Short.MAX_VALUE)
         );
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -590,8 +608,10 @@ public class frmMain extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(46, 46, 46)
-                .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 202, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(88, 88, 88)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 202, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jPGrafica, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(65, 65, 65)
                 .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -600,7 +620,9 @@ public class frmMain extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(28, 28, 28)
                 .addComponent(jLabel3)
-                .addContainerGap(665, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jPGrafica, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
@@ -644,12 +666,6 @@ public class frmMain extends javax.swing.JFrame {
         btnLimpiar.setVisible(false);
         hilo = new Hilo();
         hilo.start();
-        /*if(contadorInicio==0){
-        hilo.start();
-        } else{
-        hilo.resume();
-        }
-        contadorInicio ++;*/
     }//GEN-LAST:event_btnIniciarActionPerformed
 
     private void TablaFComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_TablaFComponentShown
@@ -699,7 +715,11 @@ public class frmMain extends javax.swing.JFrame {
         public void run() {
             int estado = 1; //Estado de while que indica si se puede seguir o no
             int i = 0; // contador de while
+            boolean existe = false;
+            Grafica Gr = new Grafica();
+            
             while (estado != 0) {
+                existe = false;
                 while (i < contador) { //Recorrer las filas
                     Revisar(i);
                     RevisarListo();
@@ -708,11 +728,14 @@ public class frmMain extends javax.swing.JFrame {
                     if ("Listo".equals(stringVerEstado) || "Espera".equals(stringVerEstado)){
                         if (faltante != 0 && faltante > Quantum) { //Ejecutando Procesos cuando sea mayor al quantum
                             for (int c = 1; c <= Quantum; c++) {
+                                Gr.paint(jPGrafica.getGraphics(), 1, tProceso, 225, faltante );
                                 TablaF.setValueAt("Procesando", i, 1);
                                 Dormir();
                                 faltante--;
+                                contadorM ++;
                                 TablaF.setValueAt(String.valueOf(faltante), i, 3);
                                 tiempoTerminado++;
+                                existe = true;
                                 RevisarListo();
                                 jtTiempoProcesos.setText(String.valueOf((tiempoTerminado - 1) + " Segundos"));
                                 // agregar la hora del sistema del inicio y final
@@ -727,14 +750,16 @@ public class frmMain extends javax.swing.JFrame {
                         } else {
                             if (faltante > 0 && Quantum != 0) { // Ejecutando proceso cuando tiempo restante sea menor que el quantum
                                 while (faltante > 0) {
+                                    Gr.paint(jPGrafica.getGraphics(), 1, tProceso, 225, faltante );
                                     TablaF.setValueAt("Procesando", i, 1);
                                     Dormir();
                                     faltante--;
+                                    contadorM ++;
                                     TablaF.setValueAt(String.valueOf(faltante), i, 3);
                                     tiempoTerminado++;
+                                    existe = true;
                                     RevisarListo();
                                     jtTiempoProcesos.setText(String.valueOf((tiempoTerminado - 1) + " Segundos"));
-                                    
                                 }
                                 TablaF.setValueAt("Espera", i, 1);
                                 if (faltante == 0 && Quantum != 0) {
@@ -758,6 +783,9 @@ public class frmMain extends javax.swing.JFrame {
                     i++; // Pasa a la siguiente fila
                 }
                 i = 0; //
+                if(existe == false){
+                tiempoTerminado++;
+                }
                 if(contador==cantidadProcesos){
                     estado = 0;   
                     btnLimpiar.setVisible(true);
@@ -765,80 +793,7 @@ public class frmMain extends javax.swing.JFrame {
             }
         }
     }
-    
-    /*
-    private class Hilo implements Runnable { //Objeto de tipo Hilo con extension ejectubale
 
-        @Override
-        public void run() {
-            int estado = 1; //Estado de while que indica si se puede seguir o no
-            int i = 0; // contador de while
-            while (estado != 0) {
-                while (i < contador) { //Recorrer las filas
-                    Revisar(i);
-                    RevisarListo();
-                    Object verEstado = TablaF.getValueAt(i, 1);
-                    String stringVerEstado = verEstado.toString();
-                    if ("Listo".equals(stringVerEstado) || "Espera".equals(stringVerEstado)){
-                        if (faltante != 0 && faltante > Quantum) { //Ejecutando Procesos cuando sea mayor al quantum
-                            for (int c = 1; c <= Quantum; c++) {
-                                TablaF.setValueAt("Procesando", i, 1);
-                                Dormir();
-                                faltante--;
-                                TablaF.setValueAt(String.valueOf(faltante), i, 3);
-                                tiempoTerminado++;
-                                RevisarListo();
-                                jtTiempoProcesos.setText(String.valueOf((tiempoTerminado - 1) + " Segundos"));
-                                // agregar la hora del sistema del inicio y final
-                            }
-                            TablaF.setValueAt("Espera", i, 1);
-                            if (faltante == 0) {
-                                TablaF.setValueAt("Terminado", i, 1);
-                                Informar(i);
-                                String horaF = lblhorasistema.getText();
-                                 TablaF.setValueAt(horaF, i, 6);
-                            }
-                        } else {
-                            if (faltante > 0 && Quantum != 0) { // Ejecutando proceso cuando tiempo restante sea menor que el quantum
-                                while (faltante > 0) {
-                                    TablaF.setValueAt("Procesando", i, 1);
-                                    Dormir();
-                                    faltante--;
-                                    TablaF.setValueAt(String.valueOf(faltante), i, 3);
-                                    tiempoTerminado++;
-                                    RevisarListo();
-                                    jtTiempoProcesos.setText(String.valueOf((tiempoTerminado - 1) + " Segundos"));
-                                    
-                                }
-                                TablaF.setValueAt("Espera", i, 1);
-                                if (faltante == 0 && Quantum != 0) {
-                                    TablaF.setValueAt("Terminado", i, 1);
-                                    TablaF.setValueAt(tiempoTerminado - 1, i, 4);
-                                    Informar(i);
-                                    String horaF = lblhorasistema.getText();
-                                    TablaF.setValueAt(horaF, i, 6);
-                                }
-                            } else {
-                                if (faltante == 0 && Quantum != 0) {
-                                    TablaF.setValueAt("Terminado", i, 1);
-                                    TablaF.setValueAt(tiempoTerminado - 1, i, 4);
-                                    Informar(i);
-                                    String horaF = lblhorasistema.getText();
-                                    TablaF.setValueAt(horaF, i, 6);
-                                }
-                            }
-                        }
-                    }                    
-                    i++; // Pasa a la siguiente fila
-                }
-                i = 0; //
-                if(contador==cantidadProcesos){
-                    estado = 0;                    
-                }
-            }
-        }
-    }
-    */
     
     public void HoraInicio(int i){
         Object textoI = TablaF.getValueAt(i, 1);
@@ -935,23 +890,32 @@ public class frmMain extends javax.swing.JFrame {
             }
         }
     }
-    
-    public void paint(Graphics g){
-        super.paint(g);
+    // Clase para graficar
+    public class Grafica {
+        
+    public  void paint(Graphics g, int x, int y, int ancho, int altura){
+        Stroke grosor = new BasicStroke (2.0f);
+        Graphics2D graficar = (Graphics2D)g;
         // x -- y -- ancho -- largo
         g.setColor(Color.GRAY);
-        g.fillRect(550, 125, 200, 550);
+        g.fillRect(1, 1, 225, 600);
         
 
         g.setColor(new Color(7, 35, 39));
-        g.fillRect(550, 575, 200, 100);
+        g.fillRect(1, 500, 225, 100);
         g.setColor(Color.WHITE);
         g.setFont(new Font("Serif", Font.BOLD, 36));
-        g.drawString("S.O.", 620, 635);
+        g.drawString("S.O.", 90, 580);
+        
+        graficar.setStroke(grosor);
+        graficar.setColor(Color.red);
+        graficar.fillRect(1, 500-((10*contadorM)- altura*10), 225, altura*10);
+        
         
         
     }
-    
+    }
+
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel Labelhora;
@@ -975,6 +939,7 @@ public class frmMain extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JLabel jLimiteActual;
+    private javax.swing.JPanel jPGrafica;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
