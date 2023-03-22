@@ -46,7 +46,7 @@ public class frmMain extends javax.swing.JFrame {
     String estado = "Listo";
     int contadorM = 10;
     int TamMemoria = 60;
-    
+    boolean esReal = false;
     
     //Metodo para guardar los datos de la tabla en un array
     void Organizar() {
@@ -872,6 +872,11 @@ public class frmMain extends javax.swing.JFrame {
                 TablaF.setValueAt("Listo", c, 1);
                 String horaI = lblhorasistema.getText();
                 TablaF.setValueAt(horaI, c, 5);
+            }else if (tProceso == 0 && esReal == false){
+                TablaF.setValueAt("Listo", c, 1);
+                String horaI = lblhorasistema.getText();
+                TablaF.setValueAt(horaI, c, 5);
+                esReal = true;
             }
         }
     }
