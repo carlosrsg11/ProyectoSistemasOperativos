@@ -142,6 +142,21 @@ public class frmMain extends javax.swing.JFrame {
         cantidadProcesos = 0;
         tiempoTerminado = 1;
     }
+    
+    void revisarBase(int i){
+        Object tiempoBase = TablaP.getValueAt(i, 1);
+        String stringTiempoBase = tiempoBase.toString();
+        int intTiempoBase = Integer.parseInt(stringTiempoBase);
+        
+        Object tiempoLimite = TablaP.getValueAt(i, 2);
+        String stringTiempoLimite = tiempoLimite.toString();
+        int intTiempoLimite = Integer.parseInt(stringTiempoLimite);
+        String HexaTiempoLimite = Integer.toString(intTiempoLimite);
+        jLimiteActual.setText(HexaTiempoLimite+"h");
+        
+        
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -748,6 +763,7 @@ public class frmMain extends javax.swing.JFrame {
                                // Gr.paint(jPGrafica.getGraphics(), 1, tProceso, 225, faltante );
                                 TablaF.setValueAt("Procesando", i, 1);
                                 Dormir();
+                                revisarBase(i);
                                 faltante--;
                                 //contadorM ++;
                                 TablaF.setValueAt(String.valueOf(faltante), i, 3);
@@ -772,6 +788,7 @@ public class frmMain extends javax.swing.JFrame {
                                    // Gr.paint(jPGrafica.getGraphics(), 1, tProceso, 225, faltante );
                                     TablaF.setValueAt("Procesando", i, 1);
                                     Dormir();
+                                    revisarBase(i);
                                     faltante--;
                                     //contadorM ++;
                                     TablaF.setValueAt(String.valueOf(faltante), i, 3);
