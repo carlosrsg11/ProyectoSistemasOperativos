@@ -132,6 +132,10 @@ public class frmMain extends javax.swing.JFrame {
         for (int i = 0; i < filasF; i++) {
             modeloF.removeRow(0);
         }
+        jContadorActual.setText(null);
+        jBaseActual.setText(null);
+        jLimiteActual.setText(null);
+        jProcesoActual.setText("Proceso Actual");
         paint(jPGrafica.getGraphics());
         contadorCPU = 10;
         TablaF.setVisible(false);
@@ -141,20 +145,40 @@ public class frmMain extends javax.swing.JFrame {
         jtTiempoProcesos.setVisible(false);
         cantidadProcesos = 0;
         tiempoTerminado = 1;
+        /**/
     }
     
     void revisarBase(int i){
-        Object tiempoBase = TablaP.getValueAt(i, 1);
-        String stringTiempoBase = tiempoBase.toString();
-        int intTiempoBase = Integer.parseInt(stringTiempoBase);
         
-        Object tiempoLimite = TablaP.getValueAt(i, 2);
-        String stringTiempoLimite = tiempoLimite.toString();
-        int intTiempoLimite = Integer.parseInt(stringTiempoLimite);
-        String HexaTiempoLimite = Integer.toString(intTiempoLimite);
+         int contadorTiempoBase = 10;
+        for(int c = 0; c < i; c++){
+            Object tiempoBase = TablaP.getValueAt(c, 2);
+            String stringTiempoBase = tiempoBase.toString();
+            int intTiempoBase = Integer.parseInt(stringTiempoBase);
+            contadorTiempoBase = contadorTiempoBase + intTiempoBase;
+        }
+        
+        String HexaTiempoBase = Integer.toHexString(contadorTiempoBase);
+        jBaseActual.setText(HexaTiempoBase+"h");
+        
+        
+        int contadorTiempoLimite = 10;
+        for(int c = 0; c <= i; c++){
+            Object tiempoLimite = TablaP.getValueAt(c, 2);
+            String stringTiempoLimite = tiempoLimite.toString();
+            int intTiempoLimite = Integer.parseInt(stringTiempoLimite);
+            contadorTiempoLimite = contadorTiempoLimite + intTiempoLimite;
+        }
+        
+        String HexaTiempoLimite = Integer.toHexString(contadorTiempoLimite);
         jLimiteActual.setText(HexaTiempoLimite+"h");
         
-        
+            Object tiempoActual = TablaF.getValueAt(i, 3);
+            String stringTiempoActual = tiempoActual.toString();
+            int intTiempoActual = Integer.parseInt(stringTiempoActual);
+            int sumaActual = contadorTiempoLimite - intTiempoActual;
+            String hexaSumaActual = Integer.toHexString(sumaActual);
+            jContadorActual.setText(hexaSumaActual+"h");
     }
     
     /**
@@ -346,7 +370,6 @@ public class frmMain extends javax.swing.JFrame {
         jPanel3.setBackground(new java.awt.Color(51, 133, 139));
 
         jLabel4.setFont(new java.awt.Font("Times New Roman", 1, 24)); // NOI18N
-        jLabel4.setForeground(new java.awt.Color(0, 0, 0));
         jLabel4.setText("CPU");
 
         jLabel7.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
@@ -355,7 +378,7 @@ public class frmMain extends javax.swing.JFrame {
         jPanel4.setBackground(new java.awt.Color(7, 35, 39));
 
         jProcesoActual.setBackground(new java.awt.Color(7, 35, 39));
-        jProcesoActual.setFont(new java.awt.Font("Times New Roman", 1, 24)); // NOI18N
+        jProcesoActual.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
         jProcesoActual.setForeground(new java.awt.Color(255, 255, 255));
         jProcesoActual.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jProcesoActual.setText("Proceso Actual");
@@ -366,24 +389,23 @@ public class frmMain extends javax.swing.JFrame {
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jProcesoActual, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jProcesoActual, javax.swing.GroupLayout.DEFAULT_SIZE, 151, Short.MAX_VALUE)
                 .addContainerGap())
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
+            .addGroup(jPanel4Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jProcesoActual, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jProcesoActual, javax.swing.GroupLayout.DEFAULT_SIZE, 29, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
         jLabel9.setFont(new java.awt.Font("Times New Roman", 0, 18)); // NOI18N
-        jLabel9.setForeground(new java.awt.Color(0, 0, 0));
         jLabel9.setText("Planificador");
 
         jActual.setBackground(new java.awt.Color(7, 35, 39));
 
-        jContadorActual.setFont(new java.awt.Font("Times New Roman", 1, 24)); // NOI18N
+        jContadorActual.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
         jContadorActual.setForeground(new java.awt.Color(255, 255, 255));
         jContadorActual.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jContadorActual.setText("Actual");
@@ -394,14 +416,14 @@ public class frmMain extends javax.swing.JFrame {
             jActualLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jActualLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jContadorActual, javax.swing.GroupLayout.DEFAULT_SIZE, 88, Short.MAX_VALUE)
+                .addComponent(jContadorActual, javax.swing.GroupLayout.DEFAULT_SIZE, 97, Short.MAX_VALUE)
                 .addContainerGap())
         );
         jActualLayout.setVerticalGroup(
             jActualLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jActualLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jContadorActual, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jContadorActual, javax.swing.GroupLayout.DEFAULT_SIZE, 33, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -489,23 +511,19 @@ public class frmMain extends javax.swing.JFrame {
         jScrollPane2.setViewportView(TablaF);
 
         jLabel11.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
-        jLabel11.setForeground(new java.awt.Color(0, 0, 0));
         jLabel11.setText("Cantidad de Procesos:");
 
         jtTerminados.setHorizontalAlignment(javax.swing.JTextField.CENTER);
 
         jLabel12.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
-        jLabel12.setForeground(new java.awt.Color(0, 0, 0));
         jLabel12.setText("Tiempo de Procesos:");
 
         jtTiempoProcesos.setHorizontalAlignment(javax.swing.JTextField.CENTER);
 
         Labelhora.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
-        Labelhora.setForeground(new java.awt.Color(0, 0, 0));
         Labelhora.setText("Hora del sistema:");
 
         lblhorasistema.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
-        lblhorasistema.setForeground(new java.awt.Color(0, 0, 0));
         lblhorasistema.setText("------------------------------");
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
@@ -513,40 +531,40 @@ public class frmMain extends javax.swing.JFrame {
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(169, 169, 169)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel3Layout.createSequentialGroup()
-                                .addGap(66, 66, 66)
-                                .addComponent(jLabel4)))
-                        .addGap(145, 145, 145))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel7)
+                            .addComponent(jLabel9)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                                .addComponent(jLabel4)
+                                .addGap(25, 25, 25)))
+                        .addGap(192, 192, 192))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(jPanel3Layout.createSequentialGroup()
-                                .addGap(12, 12, 12)
-                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jActual, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                .addGap(0, 0, Short.MAX_VALUE)
+                                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(jLabel7)
+                                .addGroup(jPanel3Layout.createSequentialGroup()
+                                    .addGap(12, 12, 12)
+                                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(jActual, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                         .addGap(158, 158, 158))))
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 478, Short.MAX_VALUE))
+                        .addComponent(jScrollPane2))
                     .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGap(87, 87, 87)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel3Layout.createSequentialGroup()
-                                .addGap(182, 182, 182)
-                                .addComponent(jLabel9))
-                            .addGroup(jPanel3Layout.createSequentialGroup()
-                                .addGap(87, 87, 87)
-                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel10))))
+                            .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel10))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
             .addGroup(jPanel3Layout.createSequentialGroup()
@@ -570,23 +588,23 @@ public class frmMain extends javax.swing.JFrame {
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGap(44, 44, 44)
+                .addGap(38, 38, 38)
                 .addComponent(jLabel4)
                 .addGap(18, 18, 18)
                 .addComponent(jLabel9)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(38, 38, 38)
                 .addComponent(jLabel7)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jActual, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGap(51, 51, 51)
+                        .addGap(104, 104, 104)
                         .addComponent(jLabel8)
                         .addGap(19, 19, 19))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jActual, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -771,8 +789,6 @@ public class frmMain extends javax.swing.JFrame {
                                 existe = true;
                                 RevisarListo();
                                 jtTiempoProcesos.setText(String.valueOf((tiempoTerminado - 1) + " Segundos"));
-                                String Hexadecimal = Integer.toHexString(tiempoTerminado);
-                                jContadorActual.setText(Hexadecimal+ "h");
                                 // agregar la hora del sistema del inicio y final
                             }
                             TablaF.setValueAt("Espera", i, 1);
@@ -796,8 +812,7 @@ public class frmMain extends javax.swing.JFrame {
                                     existe = true;
                                     RevisarListo();
                                     jtTiempoProcesos.setText(String.valueOf((tiempoTerminado - 1) + " Segundos"));
-                                    String Hexadecimal = Integer.toHexString(tiempoTerminado);
-                                    jContadorActual.setText(Hexadecimal + "h");
+
                                 }
                                 TablaF.setValueAt("Espera", i, 1);
                                 if (faltante == 0 && Quantum != 0) {
