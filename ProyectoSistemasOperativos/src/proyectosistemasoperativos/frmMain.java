@@ -22,20 +22,18 @@ import javax.swing.table.DefaultTableModel;
  *
  * @author carlo
  */
-public class frmMain extends javax.swing.JFrame {    
+public class frmMain extends javax.swing.JFrame {
+
     /**
      * Creates new form frmMain
      */
-    
+
     //Objeto reloj
     Reloj hora_sistema = new Reloj();
     Hilo hilo = new Hilo();
     Grafica grafica = new Grafica();
-    Graphics2D graficar;
-    //Grafica Gr = new Grafica();
-    int contadorInicio = 0;
     int contador = 0;
-    int contadorCPU = 10; 
+    int contadorCPU = 10;
     int Quantum = 3;
     int faltante = 0;
     int tProceso = 0;
@@ -43,79 +41,50 @@ public class frmMain extends javax.swing.JFrame {
     int cantidadProcesos = 0;
     int tiempoTerminado = 1;
     String proceso = "P";
-    String estado = "Listo";
-    int contadorM = 10;
     int TamMemoria = 60;
     boolean esReal = false;
-    
-    //Metodo para guardar los datos de la tabla en un array
-    void Organizar() {
-        int filas = TablaP.getRowCount();
-        int columnas = TablaP.getColumnCount();
 
-        // creamos el array para guardar los datos de la tabla
-        Object[][] arrayTabla = new Object[filas][columnas];
-
-        //Recorremos la tabla y metemos los datos al array
-        for (int i = 0; i < filas; i++) {
-            for (int j = 0; j < columnas; j++) {
-                arrayTabla[i][j] = TablaP.getValueAt(i, j);
-            }
-        }
-        for (int i = 0; i < filas; i++) {
-            for (int j = 0; j < columnas; j++) {
-                System.out.print(arrayTabla[i][j] + " ");
-                
-            }
-            System.out.println();
-        }
-    }
-    
     public frmMain() {
-        initComponents(); 
+        initComponents();
         limpiar();
         //inicio del hilo_reloj
         hora_sistema.start();
-        
+
         TablaF.setVisible(false);
         jtTerminados.setVisible(false);
         jtTiempoProcesos.setVisible(false);
         //paint(jPGrafica.getGraphics());
-        
+
     }
- 
-    void agregar(){ 
+
+    void agregar() {
         DefaultTableModel modelo = (DefaultTableModel) TablaP.getModel();
-        
-        
-        DefaultTableModel modeloF = (DefaultTableModel) TablaF.getModel();        
-        
-        
-        int ObtTiempo = Integer.parseInt(txtTiempo.getText());
+
+        DefaultTableModel modeloF = (DefaultTableModel) TablaF.getModel();
+
         if (txtInicio.getText().isEmpty() || txtTiempo.getText().isEmpty()) {
             JOptionPane.showMessageDialog(null, "Hacen falta datos.");
         } else {
-            if(contadorCPU + ObtTiempo <= TamMemoria) {
+            int ObtTiempo = Integer.parseInt(txtTiempo.getText());
+            if (contadorCPU + ObtTiempo <= TamMemoria) {
                 contador++;
-                String idProceso = proceso + contador;                
+                String idProceso = proceso + contador;
                 int textoInicio = Integer.parseInt(txtInicio.getText());
-                int textoTiempo = Integer.parseInt(txtTiempo.getText());  
+                int textoTiempo = Integer.parseInt(txtTiempo.getText());
                 modelo.addRow(new Object[]{idProceso, textoInicio, textoTiempo});
                 txtInicio.setText(null);
                 txtTiempo.setText(null);
                 grafica.GraficarP(jPGrafica.getGraphics(), 1, textoTiempo, 225, textoTiempo);
-                contadorCPU = ObtTiempo+contadorCPU;
-
+                contadorCPU = ObtTiempo + contadorCPU;
 
                 modeloF.addRow(new Object[]{idProceso, "--", Quantum, ObtTiempo, "--", "--", "--"});
 
+            } else {
+                JOptionPane.showMessageDialog(null, "Tamaño de memoria insuficiente.\n El espacio restante es: " + (TamMemoria - contadorCPU));
             }
-            else {
-            JOptionPane.showMessageDialog(null, "Tamaño de memoria insuficiente.\n El espacio restante es: " + (50-contadorCPU));
-            }
-        }        
+        }
     }
-    
+
     void limpiar() {
         DefaultTableModel modelo = (DefaultTableModel) TablaP.getModel();
         int filas = modelo.getRowCount();
@@ -124,9 +93,7 @@ public class frmMain extends javax.swing.JFrame {
         }
         txtInicio.setText(null);
         txtTiempo.setText(null);
-        
-        
-        
+
         DefaultTableModel modeloF = (DefaultTableModel) TablaF.getModel();
         int filasF = modeloF.getRowCount();
         for (int i = 0; i < filasF; i++) {
@@ -147,40 +114,39 @@ public class frmMain extends javax.swing.JFrame {
         tiempoTerminado = 1;
         /**/
     }
-    
-    void revisarBase(int i){
-        
-         int contadorTiempoBase = 10;
-        for(int c = 0; c < i; c++){
+
+    void revisarBase(int i) {
+
+        int contadorTiempoBase = 10;
+        for (int c = 0; c < i; c++) {
             Object tiempoBase = TablaP.getValueAt(c, 2);
             String stringTiempoBase = tiempoBase.toString();
             int intTiempoBase = Integer.parseInt(stringTiempoBase);
             contadorTiempoBase = contadorTiempoBase + intTiempoBase;
         }
-        
+
         String HexaTiempoBase = Integer.toHexString(contadorTiempoBase);
-        jBaseActual.setText(HexaTiempoBase+"h");
-        
-        
+        jBaseActual.setText(HexaTiempoBase + "h");
+
         int contadorTiempoLimite = 10;
-        for(int c = 0; c <= i; c++){
+        for (int c = 0; c <= i; c++) {
             Object tiempoLimite = TablaP.getValueAt(c, 2);
             String stringTiempoLimite = tiempoLimite.toString();
             int intTiempoLimite = Integer.parseInt(stringTiempoLimite);
             contadorTiempoLimite = contadorTiempoLimite + intTiempoLimite;
         }
-        
+
         String HexaTiempoLimite = Integer.toHexString(contadorTiempoLimite);
-        jLimiteActual.setText(HexaTiempoLimite+"h");
-        
-            Object tiempoActual = TablaF.getValueAt(i, 3);
-            String stringTiempoActual = tiempoActual.toString();
-            int intTiempoActual = Integer.parseInt(stringTiempoActual);
-            int sumaActual = contadorTiempoLimite - intTiempoActual;
-            String hexaSumaActual = Integer.toHexString(sumaActual);
-            jContadorActual.setText(hexaSumaActual+"h");
+        jLimiteActual.setText(HexaTiempoLimite + "h");
+
+        Object tiempoActual = TablaF.getValueAt(i, 3);
+        String stringTiempoActual = tiempoActual.toString();
+        int intTiempoActual = Integer.parseInt(stringTiempoActual);
+        int sumaActual = contadorTiempoLimite - intTiempoActual;
+        String hexaSumaActual = Integer.toHexString(sumaActual);
+        jContadorActual.setText(hexaSumaActual + "h");
     }
-    
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -704,7 +670,7 @@ public class frmMain extends javax.swing.JFrame {
 
     private void btnLimpiarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLimpiarActionPerformed
         limpiar();
-        contador=0;
+        contador = 0;
         hilo.stop();
     }//GEN-LAST:event_btnLimpiarActionPerformed
 
@@ -714,13 +680,14 @@ public class frmMain extends javax.swing.JFrame {
         jtTerminados.setVisible(true);
         jtTiempoProcesos.setVisible(true);
         btnLimpiar.setVisible(false);
+        btnIniciar.setVisible(false);
         hilo = new Hilo();
         hilo.start();
     }//GEN-LAST:event_btnIniciarActionPerformed
 
     private void TablaFComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_TablaFComponentShown
         // TODO add your handling code here:
-        
+
     }//GEN-LAST:event_TablaFComponentShown
 
     /**
@@ -757,8 +724,7 @@ public class frmMain extends javax.swing.JFrame {
             }
         });
     }
-    
-   
+
     private class Hilo extends Thread { //Objeto de tipo Hilo con extension ejectubale
 
         @Override
@@ -766,8 +732,8 @@ public class frmMain extends javax.swing.JFrame {
             int estado = 1; //Estado de while que indica si se puede seguir o no
             int i = 0; // contador de while
             boolean existe = false;
-           // Grafica Gr = new Grafica();
-            
+            // Grafica Gr = new Grafica();
+
             while (estado != 0) {
                 existe = false;
                 while (i < contador) { //Recorrer las filas
@@ -775,10 +741,10 @@ public class frmMain extends javax.swing.JFrame {
                     RevisarListo();
                     Object verEstado = TablaF.getValueAt(i, 1);
                     String stringVerEstado = verEstado.toString();
-                    if ("Listo".equals(stringVerEstado) || "Espera".equals(stringVerEstado)){
+                    if ("Listo".equals(stringVerEstado) || "Espera".equals(stringVerEstado)) {
                         if (faltante != 0 && faltante > Quantum) { //Ejecutando Procesos cuando sea mayor al quantum
                             for (int c = 1; c <= Quantum; c++) {
-                               // Gr.paint(jPGrafica.getGraphics(), 1, tProceso, 225, faltante );
+                                // Gr.paint(jPGrafica.getGraphics(), 1, tProceso, 225, faltante );
                                 TablaF.setValueAt("Procesando", i, 1);
                                 Dormir();
                                 revisarBase(i);
@@ -796,12 +762,12 @@ public class frmMain extends javax.swing.JFrame {
                                 TablaF.setValueAt("Terminado", i, 1);
                                 Informar(i);
                                 String horaF = lblhorasistema.getText();
-                                 TablaF.setValueAt(horaF, i, 6);
+                                TablaF.setValueAt(horaF, i, 6);
                             }
                         } else {
                             if (faltante > 0 && Quantum != 0) { // Ejecutando proceso cuando tiempo restante sea menor que el quantum
                                 while (faltante > 0) {
-                                   // Gr.paint(jPGrafica.getGraphics(), 1, tProceso, 225, faltante );
+                                    // Gr.paint(jPGrafica.getGraphics(), 1, tProceso, 225, faltante );
                                     TablaF.setValueAt("Procesando", i, 1);
                                     Dormir();
                                     revisarBase(i);
@@ -832,38 +798,39 @@ public class frmMain extends javax.swing.JFrame {
                                 }
                             }
                         }
-                    }                    
+                    }
                     i++; // Pasa a la siguiente fila
                 }
                 i = 0; //
-                if(existe == false){
-                tiempoTerminado++;
+                if (existe == false) {
+                    tiempoTerminado++;
                 }
-                if(contador==cantidadProcesos){
-                    estado = 0;   
+                if (contador == cantidadProcesos) {
+                    estado = 0;
                     btnLimpiar.setVisible(true);
+                    btnIniciar.setVisible(true);
                 }
             }
         }
     }
 
-    
-    public void HoraInicio(int i){
+    public void HoraInicio(int i) {
         Object textoI = TablaF.getValueAt(i, 1);
         String pasarI = textoI.toString();
-        if("Listo".equals(pasarI)){
-            
+        if ("Listo".equals(pasarI)) {
+
         }
     }
-    public void Informar(int i){
+
+    public void Informar(int i) {
         cantidadProcesos++;
         jtTerminados.setText(String.valueOf(cantidadProcesos + " Terminados"));
-        
+
     }
-    
-    public void RevisarListo(){
+
+    public void RevisarListo() {
         int numeroFilas = TablaF.getRowCount();
-        for(int c = 0; c < numeroFilas; c++) {
+        for (int c = 0; c < numeroFilas; c++) {
             Object tiempoInicio = TablaP.getValueAt(c, 1);
             String stringTiempoInicio = tiempoInicio.toString();
             int intTiempoInicio = Integer.parseInt(stringTiempoInicio);
@@ -872,7 +839,7 @@ public class frmMain extends javax.swing.JFrame {
                 TablaF.setValueAt("Listo", c, 1);
                 String horaI = lblhorasistema.getText();
                 TablaF.setValueAt(horaI, c, 5);
-            }else if (tProceso == 0 && esReal == false){
+            } else if (tProceso == 0 && esReal == false) {
                 TablaF.setValueAt("Listo", c, 1);
                 String horaI = lblhorasistema.getText();
                 TablaF.setValueAt(horaI, c, 5);
@@ -880,35 +847,35 @@ public class frmMain extends javax.swing.JFrame {
             }
         }
     }
-    
-    public void Revisar(int i){
+
+    public void Revisar(int i) {
         Object texto = TablaF.getValueAt(i, 0);
         String pasar = texto.toString();
         int longitud = 0;
         longitud = pasar.length();
-        if (longitud == 2){
+        if (longitud == 2) {
             char segundoCaracter = pasar.charAt(1);
             int valorEntero = Character.getNumericValue(segundoCaracter);
             procesoActual = valorEntero;
-        }else{
+        } else {
             char segundoCaracter = pasar.charAt(1);
             char tercerCaracter = pasar.charAt(2);
             String segundotercero = "" + segundoCaracter + tercerCaracter;
             int valorEntero = Integer.parseInt(segundotercero);
-            procesoActual = valorEntero;            
+            procesoActual = valorEntero;
         }
         Object tiempoFaltante = TablaF.getValueAt(i, 3);
-        String stringTiempoFaltante = tiempoFaltante.toString();        
-        int enteroTiempoFaltante = Integer.parseInt(stringTiempoFaltante);        
+        String stringTiempoFaltante = tiempoFaltante.toString();
+        int enteroTiempoFaltante = Integer.parseInt(stringTiempoFaltante);
         faltante = enteroTiempoFaltante;
         if (faltante > 0) {
             jProcesoActual.setText(String.valueOf(proceso + procesoActual));
-        }else{
+        } else {
             jProcesoActual.setText("Finalizado");
             // agregar la opción de quitarle el espacio a la memoriaCPU
         }
     }
-    
+
     public void Dormir() {
         try {
             Thread.sleep(1000); //Dormir sistema 1 segundo
@@ -916,28 +883,32 @@ public class frmMain extends javax.swing.JFrame {
             Logger.getLogger(frmMain.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-           
+
     //hilo reloj a 1 segundo real
     public class Reloj extends Thread {
+
         Calendar calendario;
-        
+
         @Override
         public void run() {
             while (true) {
                 String horaSistema = "";
                 calendario = Calendar.getInstance();
-                if (calendario.get(Calendar.HOUR_OF_DAY)<10)
-                    horaSistema += String.valueOf("0"+calendario.get(Calendar.HOUR_OF_DAY)) + ":";
-                else
+                if (calendario.get(Calendar.HOUR_OF_DAY) < 10) {
+                    horaSistema += String.valueOf("0" + calendario.get(Calendar.HOUR_OF_DAY)) + ":";
+                } else {
                     horaSistema += String.valueOf(calendario.get(Calendar.HOUR_OF_DAY)) + ":";
-                if (calendario.get(Calendar.MINUTE)<10)
-                    horaSistema += String.valueOf("0"+calendario.get(Calendar.MINUTE)) + ":";
-                else
+                }
+                if (calendario.get(Calendar.MINUTE) < 10) {
+                    horaSistema += String.valueOf("0" + calendario.get(Calendar.MINUTE)) + ":";
+                } else {
                     horaSistema += String.valueOf(calendario.get(Calendar.MINUTE)) + ":";
-                if (calendario.get(Calendar.SECOND)<10)
-                    horaSistema += String.valueOf("0"+calendario.get(Calendar.SECOND)) + ":";
-                else
+                }
+                if (calendario.get(Calendar.SECOND) < 10) {
+                    horaSistema += String.valueOf("0" + calendario.get(Calendar.SECOND)) + ":";
+                } else {
                     horaSistema += String.valueOf(calendario.get(Calendar.SECOND)) + ":";
+                }
                 horaSistema += String.valueOf(calendario.get(Calendar.MILLISECOND)) + " hrs";
                 lblhorasistema.setText(horaSistema);
                 try {
@@ -948,39 +919,40 @@ public class frmMain extends javax.swing.JFrame {
             }
         }
     }
+
     // Clase para graficar
     public class Grafica {
 
         public void GraficarP(Graphics g, int x, int y, int ancho, int altura) {
             Stroke grosor = new BasicStroke(3.0f);
             Graphics2D graficar = (Graphics2D) g;
-            String idProceso1 = proceso + contador; 
+            String idProceso1 = proceso + contador;
             g.setColor(Color.BLACK);
             g.setFont(new Font("Serif", Font.BOLD, 11));
-            g.drawString(idProceso1, 110, 600 - ((10 * contadorCPU) + ((altura/2)* 10)));
+            g.drawString(idProceso1, 110, 600 - ((10 * contadorCPU) + ((altura / 2) * 10)));
             graficar.setStroke(grosor);
             graficar.setColor(Color.BLACK);
             graficar.drawRect(3, 600 - ((10 * contadorCPU) + (altura * 10)), 220, altura * 10);
-            
 
         }
     }
-    public void paint(Graphics g) {
-            //Stroke grosor = new BasicStroke (2.0f);
-            super.paint(g);
-            // x -- y -- ancho -- largo
-            g = jPGrafica.getGraphics();
-            
-            g.setColor(Color.GRAY);
-            g.fillRect(1, 1, 225, 600);
 
-            g.setColor(new Color(7, 35, 39));
-            g.fillRect(1, 500, 225, 100);
-            g.setColor(Color.WHITE);
-            g.setFont(new Font("Serif", Font.BOLD, 36));
-            g.drawString("S.O.", 90, 580);
-        }
-   
+    public void paint(Graphics g) {
+        //Stroke grosor = new BasicStroke (2.0f);
+        super.paint(g);
+        // x -- y -- ancho -- largo
+        g = jPGrafica.getGraphics();
+
+        g.setColor(Color.GRAY);
+        g.fillRect(1, 1, 225, 600);
+
+        g.setColor(new Color(7, 35, 39));
+        g.fillRect(1, 500, 225, 100);
+        g.setColor(Color.WHITE);
+        g.setFont(new Font("Serif", Font.BOLD, 36));
+        g.drawString("S.O.", 90, 580);
+    }
+
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel Labelhora;
