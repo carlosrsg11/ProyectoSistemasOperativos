@@ -48,7 +48,7 @@ public class frmMain extends javax.swing.JFrame {
     public frmMain() {
         initComponents();
         limpiar();
-        //inicio del hilo_reloj
+        //inicio del hilo_reloj 
         hora_sistema.start();
 
         TablaF.setVisible(false);
@@ -146,7 +146,11 @@ public class frmMain extends javax.swing.JFrame {
         int sumaActual = contadorTiempoLimite - intTiempoActual;
         String hexaSumaActual = Integer.toHexString(sumaActual);
         jContadorActual.setText(hexaSumaActual + "h");
-        grafica.pintar(jPGrafica.getGraphics(), contadorTiempoBase, contadorTiempoLimite);
+        
+        Object tRes = TablaF.getValueAt(i, 3);
+        String stringTRes = tRes.toString();
+        int intTRes = Integer.parseInt(stringTRes);
+        grafica.pintar(jPGrafica.getGraphics(), contadorTiempoBase, contadorTiempoLimite, intTiempoActual);
     }
 
     /**
@@ -940,10 +944,11 @@ public class frmMain extends javax.swing.JFrame {
 
         }
 
-        public void pintar(Graphics g, int base, int limite){
+        public void pintar(Graphics g, int base, int limite, int i){
             Graphics2D graficarP = (Graphics2D) g;
             graficarP.setColor(Color.red);
-            graficarP.fillRect(3,600- (limite*10), 220, (limite-base)*10); 
+            graficarP.fillRect(3,600- (limite*10), 220, (limite-base-i+1)*10); 
+            //graficarP.fillRect(3,600- (limite*10), 220, (limite-base)*10); 
             //graficarP.fillRect(3,600- ((base*10)+(limite*10)), 220, (limite-base)*10); 
         }
     }
