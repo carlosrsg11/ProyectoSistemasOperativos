@@ -43,6 +43,7 @@ public class frmMain extends javax.swing.JFrame {
     String proceso = "P";
     int TamMemoria = 60;
     boolean esReal = false;
+    //int contadorF = 0;
 
     public frmMain() {
         initComponents();
@@ -145,6 +146,7 @@ public class frmMain extends javax.swing.JFrame {
         int sumaActual = contadorTiempoLimite - intTiempoActual;
         String hexaSumaActual = Integer.toHexString(sumaActual);
         jContadorActual.setText(hexaSumaActual + "h");
+        grafica.pintar(jPGrafica.getGraphics(), contadorTiempoBase, contadorTiempoLimite);
     }
 
     /**
@@ -286,9 +288,6 @@ public class frmMain extends javax.swing.JFrame {
                         .addGap(139, 139, 139)
                         .addComponent(jLabel2))
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(42, 42, 42)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 314, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGap(61, 61, 61)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(jPanel2Layout.createSequentialGroup()
@@ -301,8 +300,11 @@ public class frmMain extends javax.swing.JFrame {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(txtTiempo, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(btnLimpiar, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 291, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btnAdd, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 291, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(86, Short.MAX_VALUE))
+                            .addComponent(btnAdd, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 291, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(42, 42, 42)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 360, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(40, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -804,6 +806,7 @@ public class frmMain extends javax.swing.JFrame {
                 i = 0; //
                 if (existe == false) {
                     tiempoTerminado++;
+                    Dormir();
                 }
                 if (contador == cantidadProcesos) {
                     estado = 0;
@@ -934,6 +937,14 @@ public class frmMain extends javax.swing.JFrame {
             graficar.setColor(Color.BLACK);
             graficar.drawRect(3, 600 - ((10 * contadorCPU) + (altura * 10)), 220, altura * 10);
 
+
+        }
+
+        public void pintar(Graphics g, int base, int limite){
+            Graphics2D graficarP = (Graphics2D) g;
+            graficarP.setColor(Color.red);
+            graficarP.fillRect(3,600- (limite*10), 220, (limite-base)*10); 
+            //graficarP.fillRect(3,600- ((base*10)+(limite*10)), 220, (limite-base)*10); 
         }
     }
 
