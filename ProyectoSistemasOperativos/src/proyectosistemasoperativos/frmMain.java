@@ -43,6 +43,8 @@ public class frmMain extends javax.swing.JFrame {
     String proceso = "P";
     int TamMemoria = 59;
     boolean esReal = false;
+    int contadorProcesos = 0;
+    int nuevoContador = 0;
     //int contadorF = 0;
 
     public frmMain() {
@@ -75,7 +77,7 @@ public class frmMain extends javax.swing.JFrame {
                 modelo.addRow(new Object[]{idProceso, textoInicio, textoTiempo});
                 txtInicio.setText(null);
                 txtTiempo.setText(null);
-                grafica.GraficarP(jPGrafica.getGraphics(), 1, textoTiempo, 225, textoTiempo);
+                //grafica.GraficarP(jPGrafica.getGraphics(), 1, textoTiempo, 225, textoTiempo);
                 contadorCPU = ObtTiempo + contadorCPU;
 
                 modeloF.addRow(new Object[]{idProceso, "--", Quantum, ObtTiempo, "--", "--", "--"});
@@ -150,7 +152,7 @@ public class frmMain extends javax.swing.JFrame {
         Object tRes = TablaF.getValueAt(i, 3);
         String stringTRes = tRes.toString();
         int intTRes = Integer.parseInt(stringTRes);
-        grafica.pintar(jPGrafica.getGraphics(), contadorTiempoBase, contadorTiempoLimite, intTiempoActual);
+        //grafica.pintar(jPGrafica.getGraphics(), contadorTiempoBase, contadorTiempoLimite, intTiempoActual);
     }
 
     /**
@@ -740,7 +742,6 @@ public class frmMain extends javax.swing.JFrame {
             int i = 0; // contador de while
             boolean existe = false;
             // Grafica Gr = new Grafica();
-
             while (estado != 0) {
                 existe = false;
                 while (i < contador) { //Recorrer las filas
@@ -751,10 +752,11 @@ public class frmMain extends javax.swing.JFrame {
                     if ("Listo".equals(stringVerEstado) || "Espera".equals(stringVerEstado)) {
                         if (faltante != 0 && faltante > Quantum) { //Ejecutando Procesos cuando sea mayor al quantum
                             for (int c = 1; c <= Quantum; c++) {
+                                paintActivador(jPGrafica.getGraphics());
                                 // Gr.paint(jPGrafica.getGraphics(), 1, tProceso, 225, faltante );
                                 TablaF.setValueAt("Procesando", i, 1);
-                                Dormir();
                                 revisarBase(i);
+                                Dormir();
                                 faltante--;
                                 //contadorM ++;
                                 TablaF.setValueAt(String.valueOf(faltante), i, 3);
@@ -764,11 +766,9 @@ public class frmMain extends javax.swing.JFrame {
                                 jtTiempoProcesos.setText(String.valueOf((tiempoTerminado - 1) + " Segundos"));
                                 // agregar la hora del sistema del inicio y final
                             }
-                            
                             TablaF.setValueAt("Espera", i, 1);
                             ActivadorActivo(jPGrafica.getGraphics());//pintar verde
                             Activador();//activador
-                            paintActivador(jPGrafica.getGraphics());
                             if (faltante == 0) {
                                 TablaF.setValueAt("Terminado", i, 1);
                                 Informar(i);
@@ -779,9 +779,10 @@ public class frmMain extends javax.swing.JFrame {
                             if (faltante > 0 && Quantum != 0) { // Ejecutando proceso cuando tiempo restante sea menor que el quantum
                                 while (faltante > 0) {
                                     // Gr.paint(jPGrafica.getGraphics(), 1, tProceso, 225, faltante );
+                                    paintActivador(jPGrafica.getGraphics());
                                     TablaF.setValueAt("Procesando", i, 1);
-                                    Dormir();
                                     revisarBase(i);
+                                    Dormir();
                                     faltante--;
                                     //contadorM ++;
                                     TablaF.setValueAt(String.valueOf(faltante), i, 3);
@@ -789,15 +790,14 @@ public class frmMain extends javax.swing.JFrame {
                                     existe = true;
                                     RevisarListo();
                                     jtTiempoProcesos.setText(String.valueOf((tiempoTerminado - 1) + " Segundos"));
-
-                                } 
+                                }
                                 TablaF.setValueAt("Espera", i, 1);
                                 ActivadorActivo(jPGrafica.getGraphics());//pintar verde
                                 Activador();//activador
-                                paintActivador(jPGrafica.getGraphics());
+                                //paintActivador(jPGrafica.getGraphics());
                                 if (faltante == 0 && Quantum != 0) {
                                     TablaF.setValueAt("Terminado", i, 1);
-                                    TablaF.setValueAt(tiempoTerminado - 1, i, 4);
+                                    TablaF.setValueAt(tiempoTerminado - 2, i, 4);
                                     Informar(i);
                                     String horaF = lblhorasistema.getText();
                                     TablaF.setValueAt(horaF, i, 6);
@@ -805,7 +805,7 @@ public class frmMain extends javax.swing.JFrame {
                             } else {
                                 if (faltante == 0 && Quantum != 0) {
                                     TablaF.setValueAt("Terminado", i, 1);
-                                    TablaF.setValueAt(tiempoTerminado - 1, i, 4);
+                                    TablaF.setValueAt(tiempoTerminado - 2, i, 4);
                                     Informar(i);
                                     String horaF = lblhorasistema.getText();
                                     TablaF.setValueAt(horaF, i, 6);
@@ -849,17 +849,26 @@ public class frmMain extends javax.swing.JFrame {
             Object tiempoInicio = TablaP.getValueAt(c, 1);
             String stringTiempoInicio = tiempoInicio.toString();
             int intTiempoInicio = Integer.parseInt(stringTiempoInicio);
+            Object tardado = TablaP.getValueAt(c, 2);
+            String stringTardado = tardado.toString();
+            int intTardado = Integer.parseInt(stringTardado);
             tProceso = intTiempoInicio; // este es el tiempo en que inicia el proceso
             if (tProceso == tiempoTerminado) {
                 TablaF.setValueAt("Listo", c, 1);
                 String horaI = lblhorasistema.getText();
                 TablaF.setValueAt(horaI, c, 5);
+                contadorProcesos = contadorProcesos + intTardado;
+                nuevoContador++;
+                grafica.GraficarP(jPGrafica.getGraphics(), contadorProcesos,nuevoContador);
             } else if (tProceso == 0 && esReal == false) {
                 TablaF.setValueAt("Listo", c, 1);
                 String horaI = lblhorasistema.getText();
                 TablaF.setValueAt(horaI, c, 5);
                 esReal = true;
-            }
+                /*contadorProcesos = contadorProcesos + intTardado;
+                nuevoContador++;
+                grafica.GraficarP(jPGrafica.getGraphics(), contadorProcesos,nuevoContador);*/
+            }            
         }
     }
 
@@ -947,7 +956,7 @@ public class frmMain extends javax.swing.JFrame {
     // Clase para graficar
     public class Grafica {
 
-        public void GraficarP(Graphics g, int x, int y, int ancho, int altura) {
+        /*public void GraficarP(Graphics g, int x, int y, int ancho, int altura) {
             Stroke grosor = new BasicStroke(3.0f);
             Graphics2D graficar = (Graphics2D) g;
             String idProceso1 = proceso + contador;
@@ -959,8 +968,22 @@ public class frmMain extends javax.swing.JFrame {
             graficar.drawRect(3, 600 - ((10 * contadorCPU) + (altura * 10)), 220, altura * 10);
 
 
-        }
+        }*/
 
+        public void GraficarP(Graphics g, int altura, int c) {
+            Stroke grosor = new BasicStroke(3.0f);
+            Graphics2D graficar = (Graphics2D) g;
+            String idProceso1 = proceso + c;
+            g.setColor(Color.BLACK);
+            g.setFont(new Font("Serif", Font.BOLD, 11));
+            g.drawString(idProceso1, 110, 600 - ((10 * 10) + ((altura / 2) * 10)));
+            graficar.setStroke(grosor);
+            graficar.setColor(Color.BLACK);
+            graficar.drawRect(3, 600 - ((10 * 10) + (altura * 10)), 220, altura * 10);
+
+
+        }
+        
         public void pintar(Graphics g, int base, int limite, int i){
             Graphics2D graficarP = (Graphics2D) g;
             graficarP.setColor(Color.red);
