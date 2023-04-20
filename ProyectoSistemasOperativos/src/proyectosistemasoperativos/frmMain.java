@@ -41,7 +41,7 @@ public class frmMain extends javax.swing.JFrame {
     int cantidadProcesos = 0;
     int tiempoTerminado = 1;
     String proceso = "P";
-    int TamMemoria = 60;
+    int TamMemoria = 59;
     boolean esReal = false;
     //int contadorF = 0;
 
@@ -687,6 +687,7 @@ public class frmMain extends javax.swing.JFrame {
         jtTiempoProcesos.setVisible(true);
         btnLimpiar.setVisible(false);
         btnIniciar.setVisible(false);
+        paintActivador(jPGrafica.getGraphics());
         hilo = new Hilo();
         hilo.start();
     }//GEN-LAST:event_btnIniciarActionPerformed
@@ -763,7 +764,11 @@ public class frmMain extends javax.swing.JFrame {
                                 jtTiempoProcesos.setText(String.valueOf((tiempoTerminado - 1) + " Segundos"));
                                 // agregar la hora del sistema del inicio y final
                             }
+                            
                             TablaF.setValueAt("Espera", i, 1);
+                            ActivadorActivo(jPGrafica.getGraphics());//pintar verde
+                            Activador();//activador
+                            paintActivador(jPGrafica.getGraphics());
                             if (faltante == 0) {
                                 TablaF.setValueAt("Terminado", i, 1);
                                 Informar(i);
@@ -785,8 +790,11 @@ public class frmMain extends javax.swing.JFrame {
                                     RevisarListo();
                                     jtTiempoProcesos.setText(String.valueOf((tiempoTerminado - 1) + " Segundos"));
 
-                                }
+                                } 
                                 TablaF.setValueAt("Espera", i, 1);
+                                ActivadorActivo(jPGrafica.getGraphics());//pintar verde
+                                Activador();//activador
+                                paintActivador(jPGrafica.getGraphics());
                                 if (faltante == 0 && Quantum != 0) {
                                     TablaF.setValueAt("Terminado", i, 1);
                                     TablaF.setValueAt(tiempoTerminado - 1, i, 4);
@@ -890,6 +898,15 @@ public class frmMain extends javax.swing.JFrame {
             Logger.getLogger(frmMain.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    
+    public void Activador(){
+          try {
+            Thread.sleep(1000); //Dormir sistema 1 segundo
+            tiempoTerminado++; // tiempo terminado ++
+        } catch (InterruptedException ex) {
+            Logger.getLogger(frmMain.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 
     //hilo reloj a 1 segundo real
     public class Reloj extends Thread {
@@ -967,6 +984,21 @@ public class frmMain extends javax.swing.JFrame {
         g.setColor(Color.WHITE);
         g.setFont(new Font("Serif", Font.BOLD, 36));
         g.drawString("S.O.", 90, 580);
+        
+        
+    }
+    
+    public void paintActivador(Graphics g){
+        //super.paint(g);
+        // x -- y -- ancho -- largo
+        g = jPGrafica.getGraphics();
+        g.setColor(Color.BLUE);
+        g.fillRect(1, 1, 225, 10);
+    }
+    public void ActivadorActivo(Graphics g){
+       g = jPGrafica.getGraphics();
+        g.setColor(Color.GREEN);
+        g.fillRect(1, 1, 225, 10); 
     }
 
     
